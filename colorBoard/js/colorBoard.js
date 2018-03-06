@@ -26,11 +26,11 @@
                 attrs: { id: 'board' },
                 style: { margin: '10px'}
             }),
-            color;
+            colorArr;
         // 当前颜色
         this.currentColor = config.initColor || 'rgb(255, 0, 0)';
-        color = this.currentColor.match(/(\d+)/gi);
-        this.color = color ? [color[0], color[1], color[2]] : [255, 0, 0];      
+        colorArr = this.currentColor.match(/(\d+)/gi);
+        this.color = colorArr ? [colorArr[0], colorArr[1], colorArr[2]] : [255, 0, 0];      
         // fine对象
         this.fineGrain = new FineGrain({
             el: fineElm,
@@ -43,7 +43,7 @@
             cvsW: coarse.width || 20,
             cvsH: coarse.height || 200
         });
-        //fine对象
+        //board对象
         this.board = new Board({
             el: boardElm,
             cvsW: board.width || 100,
@@ -55,29 +55,24 @@
         })
         // 响应
         this.fineGrain.whenColorChange(function(data){
-            var rgb = data.currentColor;
-            this.currentColor = 'rgb(' + rgb.join(',') + ')';
-            this.board.setColor(rgb);
-            config.colorChange && config.colorChange(this.currentColor);
+            this.setColor(data.currentColor, true);
         }, this);
         this.coarseGrain.whenColorChange(function(data){
-            var rgb = data.currentColor;
-            this.currentColor = 'rgb(' + rgb.join(',') + ')';
-            this.fineGrain.drawByColor(rgb);
-            this.board.setColor(rgb);
-            config.colorChange && config.colorChange(this.currentColor);
+            this.setColor(data.currentColor);
         }, this);
-
         this.board.whenBoardChange(function(rgb){
-            this.currentColor = 'rgb(' + rgb.join(',') + ')';
-            this.fineGrain.drawByColor(rgb);
-            config.colorChange && config.colorChange(this.currentColor);
+            this.setColor(rgb);
         }, this);
         // 设置颜色
-        this.setColor = function(rgb){
+        this.setColor = function(rgb, notNeedFine){
+            if(typeof rgb == 'string'){
+                rgb = rgb.match(/(\d+)/gi);
+                rgb = [rgb[0], rgb[1], rgb[2]];
+            }
             this.currentColor = 'rgb(' + rgb.join('') + ')';
-            this.fineGrain.drawByColor(rgb);
+            notNeedFine ? null : this.fineGrain.drawByColor(rgb);
             this.board.setColor(rgb);
+            config.colorChange && config.colorChange(this.currentColor);
         }
         // 初始化颜色
         this.setColor(this.color);
