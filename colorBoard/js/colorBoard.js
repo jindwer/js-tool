@@ -37,6 +37,7 @@
             cvsW: fine.width || 200,
             cvsH: fine.height || 200
         });
+        console.log(this.fineGrain)
         //coarse对象
         this.coarseGrain = new CoarseGrain({
             el: coarseElm,
@@ -107,7 +108,9 @@
         //初始画板
         this.drawByColor([255, 255, 255]);
     }
-    FineGrain.prototype = ColorSelector.prototype;
+    //继承ColorSelector
+    inhreit(FineGrain, ColorSelector);
+    // FineGrain.prototype = ColorSelector.prototype;
     /* 粗粒度色板对象CoarseGrain 继承自ColorSelector*/
     function CoarseGrain(config){
         config.idStr = config.idStr || 'coarse';
@@ -119,7 +122,8 @@
             this.moveSelector(this.selectorSize / 2, y);
         }, this);
     }
-    CoarseGrain.prototype = ColorSelector.prototype;
+    //继承ColorSelector
+    inhreit(CoarseGrain, ColorSelector);
 
     /* 选色控件类ColorSelector */
     function ColorSelector(config){
@@ -385,6 +389,13 @@
             
     }
     /* 工具 */
+    //继承
+    function inhreit(Child, Parent){
+        var Inner = function(){};
+        Inner.prototype = Parent.prototype;
+        Child.prototype = new Inner();
+        Child.prototype.constructor = Child;
+    }
     //实现订阅发布
     function Subpub(){
         // 订阅者
