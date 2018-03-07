@@ -69,7 +69,7 @@
                 rgb = rgb.match(/(\d+)/gi);
                 rgb = [rgb[0], rgb[1], rgb[2]];
             }
-            this.currentColor = 'rgb(' + rgb.join('') + ')';
+            this.currentColor = 'rgb(' + rgb.join(',') + ')';
             notNeedFine ? null : this.fineGrain.drawByColor(rgb);
             this.board.setColor(rgb);
             config.colorChange && config.colorChange(this.currentColor);
