@@ -37,7 +37,6 @@
             cvsW: fine.width || 200,
             cvsH: fine.height || 200
         });
-        console.log(this.fineGrain)
         //coarse对象
         this.coarseGrain = new CoarseGrain({
             el: coarseElm,
@@ -246,16 +245,17 @@
                     var input = _createElement('input', {
                         attrs: {
                             type: 'text',
-                            value: 'rgb(' + this.currentValue + ')'
-                        },
-                        style: {
-                            position: 'fixed',
-                            top: '-1000px'
+                            value: 'rgb(' + this.currentValue + ')',
+                            readonly: 'readonly'
                         }
                     });
                     document.body.appendChild(input);
                     input.select();
-                    document.execCommand('copy', true, null);  
+                    try {
+                        document.execCommand('copy', true, null)
+                    } catch (error) {
+                        alert('请手动复制各颜色值!');   
+                    }
                     document.body.removeChild(input);  
                     input = null;
                 }.bind(this)
