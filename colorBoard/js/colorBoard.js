@@ -251,6 +251,7 @@
                     });
                     document.body.appendChild(input);
                     input.select();
+                    input.setSelectionRange(0, 100);
                     try {
                         document.execCommand('copy', true, null)
                     } catch (error) {

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,body,div{
+            margin: 0;
+            padding: 0;
+        }
+        .pull-to-callback{
+            width: 100%;
+        }
+        .pull-to-callback-data{
+            width: 100%;
+            background-color: antiquewhite;
+        }
+        .pull-to-callback-message{
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="pull-to-callback">
+        <div class="pull-to-callback-data">
+            <ol class="data-box">
+                <li data-id="001">北京</li>
+                <li data-id="002">上海</li>
+                <li data-id="003">广州</li>
+                <li data-id="004">深圳</li>
+            </ol>
+        </div>
+        <div class="pull-to-callback-message"></div>
+    </div>
+    <script src="./js/pullToCallback.js"></script>
+    <script>
+        (function(){
+            const dataBoxElm = document.querySelector('.data-box');
+
+            new PullToCallback({
+                elm: '.pull-to-callback',
+                limit: 80,
+                ratio: 1,
+                beforeTouch: function(local, instance){
+                    console.log('beforeTouch');
+                },
+                touchMove: function(local, instance){
+                    console.log('touchMove');
+                },
+                touchEnd: function(local, instance){
+                    console.log('touchEnd');
+                },
+                callback: function(resolve){
+                    //ajax
+                    setTimeout(function(){
+                        let data = [
+                            {id: '004', city: '杭州'},
+                            {id: '005', city: '武汉'},
+                            {id: '006', city: '西安'},
+                            {id: '007', city: '南京'}
+                        ];
+                        let container = document.createDocumentFragment();    
+                        data.forEach(function(item){
+                            let li = document.createElement('li');
+                            li.setAttribute('data-id', item.id);
+                            li.innerHTML = item.city;
+                            container.appendChild(li);
+                        });
+                        dataBoxElm.insertBefore(container, dataBoxElm.firstElementChild);
+                        resolve('更新'+ data.length +'条记录!', 1000); 
+                    }, 2000);   
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
